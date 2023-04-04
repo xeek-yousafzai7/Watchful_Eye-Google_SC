@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "978023321445",
+    "project_id": "watchful-eye-aa541",
+    "storage_bucket": "watchful-eye-aa541.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:978023321445:android:fb072a74898b1379c25b8c",
+        "android_client_info": {
+          "package_name": "com.example.watchful_eye"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "978023321445-298jg28ggd6fiic270g7erq3244p00fp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgqZTd2tK3hRfEUS3WxIypv8yb6CLrI3M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "978023321445-298jg28ggd6fiic270g7erq3244p00fp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
