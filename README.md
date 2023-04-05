@@ -6,7 +6,7 @@ Two Android phones running Android OS version 5.0 or higher.
 Android Studio or Visual Studio Code installed on your computer.
 Basic knowledge of Android development and Java programming language.
 
-#Installation
+# Installation
 To run this project, you will need to follow the steps below:
 
 Clone this repository to your local machine or download the zip file and extract it to your desired location.
