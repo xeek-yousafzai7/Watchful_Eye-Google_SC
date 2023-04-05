@@ -1,10 +1,11 @@
-#Project Name
+# Project Name
 Watchful Eye
 
-#Requirements
+# Requirements
 Two Android phones running Android OS version 5.0 or higher.
 Android Studio or Visual Studio Code installed on your computer.
 Basic knowledge of Android development and Java programming language.
+
 #Installation
 To run this project, you will need to follow the steps below:
 
