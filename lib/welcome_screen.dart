@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:watchful_eye/watch_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -50,6 +51,17 @@ class WelcomeScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return const WatchScreen();
+            }),
+          );
+        },
+        child: const Icon(Icons.watch),
       ),
     );
   }

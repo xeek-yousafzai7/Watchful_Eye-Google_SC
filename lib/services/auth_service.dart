@@ -35,6 +35,7 @@ class AuthServices {
         'phone': phone,
         'instituteName': instituteName,
         'instituteAddress': instituteAddress,
+        "totalChildren": 0,
       });
       return value;
     });

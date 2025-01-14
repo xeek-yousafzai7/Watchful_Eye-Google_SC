@@ -35,10 +35,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   key: _formKey,
                   child: Column(
                     children: [
+                      // Welcome Text
+                      Text(
+                        "Welcome to Watchful Eye",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                       const Text(
                         "Register",
                         style: TextStyle(
-                          fontSize: 24,
+                          fontSize: 18,
                           fontWeight: FontWeight.w500,
                         ),
                       ),

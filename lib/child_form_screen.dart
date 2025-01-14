@@ -12,9 +12,14 @@ class ChildFormScreen extends StatefulWidget {
 class _ChildFormScreenState extends State<ChildFormScreen> {
   final _formKey = GlobalKey<FormState>();
   String _name = "";
-  String _institution = "";
+  String _parentUserName = "";
   String _emergencyContact = "";
+  String _watchId = "";
   bool _isLoading = false;
+
+  double _latitude = 0.0;
+  double _longitude = 0.0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,19 +81,84 @@ class _ChildFormScreenState extends State<ChildFormScreen> {
                       const SizedBox(height: 20),
                       TextFormField(
                         onSaved: (newValue) {
-                          _institution = newValue ?? "";
+                          _watchId = newValue ?? "";
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return "Please enter your child's institution";
+                            return "Please enter watch ID";
                           }
                           return null;
                         },
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: "Institution",
-                          hintText: "Enter your child's institution",
+                          labelText: "Watch ID",
+                          hintText: "Enter watch ID",
                         ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        onSaved: (newValue) {
+                          _parentUserName = newValue ?? "";
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please enter parent username";
+                          }
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Parent UserName",
+                          hintText: "Enter parent username",
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              onSaved: (newValue) {
+                                _latitude = double.parse(newValue ?? "0.0");
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Please enter latitude";
+                                } else if (double.tryParse(value) == null) {
+                                  return "Please enter a valid number";
+                                }
+                                return null;
+                              },
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: "Latitude",
+                                hintText: "Enter latitude",
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: TextFormField(
+                              onSaved: (newValue) {
+                                _longitude = double.parse(newValue ?? "0.0");
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Please enter longitude";
+                                } else if (double.tryParse(value) == null) {
+                                  return "Please enter a valid number";
+                                }
+                                return null;
+                              },
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: "Longitude",
+                                hintText: "Enter longitude",
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
@@ -114,19 +184,24 @@ class _ChildFormScreenState extends State<ChildFormScreen> {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
                             final docref = await FireStoreServices.addChild(
-                                    name: _name,
-                                    instituteName: _institution,
-                                    emergencyContact: _emergencyContact)
-                                .then((value) {
-                              Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(
-                                builder: (context) {
-                                  return ChildDetailsScreen(
-                                    childRef: value,
-                                  );
-                                },
-                              ), (route) => false);
-                            });
+                              name: _name,
+                              emergencyContact: _emergencyContact,
+                              parentUserName: _parentUserName,
+                              watchId: _watchId,
+                              latitude: _latitude,
+                              longitude: _longitude,
+                            ).then(
+                              (value) {
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                  builder: (context) {
+                                    return ChildDetailsScreen(
+                                      childRef: value,
+                                    );
+                                  },
+                                ), (route) => false);
+                              },
+                            );
                           }
                         },
                         child: const Text("Send Details"),

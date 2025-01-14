@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:watchful_eye/services/firestore_services.dart';
 
 class ChildDetailsScreen extends StatefulWidget {
   const ChildDetailsScreen({super.key, required this.childRef});
@@ -14,7 +15,7 @@ class ChildDetailsScreen extends StatefulWidget {
 }
 
 class _ChildDetailsScreenState extends State<ChildDetailsScreen> {
-  Position? _currentPosition;
+  // Position? _currentPosition;
   Position? _homePosition;
   @override
   Widget build(BuildContext context) {
@@ -78,129 +79,167 @@ class _ChildDetailsScreenState extends State<ChildDetailsScreen> {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               final child = snapshot.data as DocumentSnapshot;
-              return Container(
+              return SingleChildScrollView(
                 padding: const EdgeInsets.all(20),
-                width: double.infinity,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Watch Display Data",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w900,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Child's Information",
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Card(
+                      child: ListTile(
+                        title: const Text("ID"),
+                        subtitle: SelectableText(child.id),
+                        trailing: IconButton(
+                          onPressed: () {
+                            Clipboard.setData(
+                              ClipboardData(text: child.id),
+                            );
+                          },
+                          icon: const Icon(Icons.copy),
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      Card(
-                        child: ListTile(
-                          title: const Text("ID"),
-                          subtitle: SelectableText(child.id),
-                          trailing: IconButton(
-                            onPressed: () {
-                              Clipboard.setData(
-                                ClipboardData(text: child.id),
-                              );
-                            },
-                            icon: const Icon(Icons.copy),
-                          ),
+                    ),
+                    Card(
+                      child: ListTile(
+                        title: const Text("Name"),
+                        subtitle: Text(child.get("name")),
+                      ),
+                    ),
+                    Card(
+                      child: ListTile(
+                        title: const Text("Parent UserName"),
+                        subtitle: Text(
+                            child.get("parentUserName") ?? "Not Available"),
+                      ),
+                    ),
+                    Card(
+                      child: ListTile(
+                        title: const Text("Institution"),
+                        subtitle: Text(child.get("institutionId")),
+                      ),
+                    ),
+                    Card(
+                      child: ListTile(
+                        title: const Text("Emergency Contact"),
+                        subtitle: Text(child.get("emergencyContact")),
+                      ),
+                    ),
+                    /* Card(
+                      child: ListTile(
+                        title: const Text("Home Location"),
+                        subtitle: Text(
+                          child.get("homeLocation") != null
+                              ? "${child.get("homeLocation").latitude}, ${child.get("homeLocation").longitude}"
+                              : _homePosition == null
+                                  ? "Not Available"
+                                  : "${_homePosition!.latitude}, ${_homePosition!.longitude}",
                         ),
                       ),
-                      Card(
-                        child: ListTile(
-                          title: const Text("Name"),
-                          subtitle: Text(child.get("name")),
+                    ), */
+                    if (child.get("watchId") != null)
+                      FutureBuilder(
+                        future: FireStoreServices.getWatchData(
+                          child.get("watchId") ?? "watchId",
                         ),
-                      ),
-                      Card(
-                        child: ListTile(
-                          title: const Text("Institution"),
-                          subtitle: Text(child.get("instituteName")),
-                        ),
-                      ),
-                      Card(
-                        child: ListTile(
-                          title: const Text("Emergency Contact"),
-                          subtitle: Text(child.get("emergencyContact")),
-                        ),
-                      ),
-                      Card(
-                        child: ListTile(
-                          title: const Text("Home Location"),
-                          subtitle: Text(
-                            child.get("homeLocation") != null
-                                ? "${child.get("homeLocation").latitude}, ${child.get("homeLocation").longitude}"
-                                : _homePosition == null
-                                    ? "Not Available"
-                                    : "${_homePosition!.latitude}, ${_homePosition!.longitude}",
-                          ),
-                        ),
-                      ),
-                      Card(
-                        child: ListTile(
-                          title: const Text("Current Location"),
-                          subtitle: Text(
-                            child.get("currentLocation") != null
-                                ? "${child.get("currentLocation").latitude}, ${child.get("currentLocation").longitude}"
-                                : _currentPosition == null
-                                    ? "Not Available"
-                                    : "${_currentPosition!.latitude}, ${_currentPosition!.longitude}",
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () async {
-                          // print(child.reference.id);
-                          final pemission = await Geolocator.checkPermission();
-                          if (pemission == LocationPermission.denied) {
-                            await Geolocator.requestPermission();
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
                           }
-                          final homePosition =
-                              await Geolocator.getCurrentPosition(
-                            desiredAccuracy: LocationAccuracy.high,
+                          final watchData = snapshot.data as DocumentSnapshot;
+                          return Column(
+                            children: [
+                              Card(
+                                child: ListTile(
+                                  title: const Text("Current Location"),
+                                  subtitle: Text(
+                                    watchData.get("location") != null
+                                        ? "${watchData.get("location").latitude}, ${watchData.get("location").longitude}"
+                                        : "Not Available",
+                                  ),
+                                ),
+                              ),
+                              Card(
+                                child: ListTile(
+                                  title: const Text("Heart Beat"),
+                                  subtitle: Text(
+                                    watchData.get("heartbeat") != null
+                                        ? "${watchData.get("heartbeat")} bpm"
+                                        : "Not Available",
+                                  ),
+                                ),
+                              ),
+                              Card(
+                                child: ListTile(
+                                  title: const Text("Tamper"),
+                                  subtitle: Text(
+                                    watchData.get("tamper") != null
+                                        ? "${watchData.get("tamper")}"
+                                        : "Not Available",
+                                  ),
+                                ),
+                              ),
+                            ],
                           );
+                        },
+                      ),
+
+                    /* ElevatedButton(
+                      onPressed: () async {
+                        // print(child.reference.id);
+                        final pemission = await Geolocator.checkPermission();
+                        if (pemission == LocationPermission.denied) {
+                          await Geolocator.requestPermission();
+                        }
+                        final homePosition =
+                            await Geolocator.getCurrentPosition(
+                          desiredAccuracy: LocationAccuracy.high,
+                        );
+                        child.reference.update({
+                          "homeLocation": GeoPoint(
+                            homePosition.latitude,
+                            homePosition.longitude,
+                          ),
+                        });
+                        if (mounted) {
+                          setState(() {
+                            _homePosition = homePosition;
+                          });
+                        }
+              
+                        Geolocator.getPositionStream().listen((event) {
                           child.reference.update({
-                            "homeLocation": GeoPoint(
-                              homePosition.latitude,
-                              homePosition.longitude,
+                            "currentLocation": GeoPoint(
+                              event.latitude,
+                              event.longitude,
                             ),
                           });
                           if (mounted) {
                             setState(() {
-                              _homePosition = homePosition;
+                              _currentPosition = event;
                             });
                           }
-
-                          Geolocator.getPositionStream().listen((event) {
-                            child.reference.update({
-                              "currentLocation": GeoPoint(
-                                event.latitude,
-                                event.longitude,
-                              ),
-                            });
-                            if (mounted) {
-                              setState(() {
-                                _currentPosition = event;
-                              });
-                            }
-                          });
-                          // final position = await Geolocator.getCurrentPosition(
-                          //   desiredAccuracy: LocationAccuracy.high,
-                          // );
-                          // child.reference.update({
-                          //   "currentLocation": GeoPoint(
-                          //     position.latitude,
-                          //     position.longitude,
-                          //   ),
-                          // });
-                        },
-                        child: const Text("fetch location"),
-                      ),
-                    ],
-                  ),
+                        });
+                        // final position = await Geolocator.getCurrentPosition(
+                        //   desiredAccuracy: LocationAccuracy.high,
+                        // );
+                        // child.reference.update({
+                        //   "currentLocation": GeoPoint(
+                        //     position.latitude,
+                        //     position.longitude,
+                        //   ),
+                        // });
+                      },
+                      child: const Text("fetch location"),
+                    ), */
+                  ],
                 ),
               );
 

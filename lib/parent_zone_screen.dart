@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:watchful_eye/parent_screen.dart';
 import 'package:watchful_eye/services/firestore_services.dart';
 import 'package:watchful_eye/watching_child_screen.dart';
 
@@ -8,7 +9,7 @@ class ParentZoneScren extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String childId = "";
+    String parentUsername = "";
     return Scaffold(
       appBar: AppBar(
         title: const Text("Watchful Eye"),
@@ -24,18 +25,26 @@ class ParentZoneScren extends StatelessWidget {
             const SizedBox(height: 20),
             TextField(
               onChanged: (value) {
-                childId = value;
+                parentUsername = value;
               },
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: "Child ID",
-                hintText: "Enter your child's ID",
+                labelText: "Enter your UserName",
+                hintText: "Enter your UserName",
               ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                FirebaseFirestore firestore = FirebaseFirestore.instance;
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return ParentScreen(
+                        parentUsername: parentUsername,
+                      );
+                    },
+                  ),
+                ); /* FirebaseFirestore firestore = FirebaseFirestore.instance;
                 DocumentSnapshot snapshot = await firestore
                     .collection("childs")
                     .doc(childId)
@@ -55,9 +64,9 @@ class ParentZoneScren extends StatelessWidget {
                     );
                   }
                   return value;
-                });
+                }); */
               },
-              child: const Text("Track Child"),
+              child: const Text("Continue"),
             ),
           ],
         ),
