@@ -8,6 +8,8 @@ import 'package:watchful_eye/extensions/context_extensions.dart';
 class AllChildsScreen extends StatelessWidget {
   const AllChildsScreen({super.key});
 
+  static const routeName = "/all-childs";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

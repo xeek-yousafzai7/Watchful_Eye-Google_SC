@@ -7,6 +7,8 @@ import 'package:watchful_eye/watching_child_screen.dart';
 class ParentZoneScren extends StatelessWidget {
   const ParentZoneScren({super.key});
 
+  static const routeName = "/parent-zone";
+
   @override
   Widget build(BuildContext context) {
     String parentUsername = "";

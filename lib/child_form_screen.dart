@@ -5,6 +5,8 @@ import 'package:watchful_eye/services/firestore_services.dart';
 class ChildFormScreen extends StatefulWidget {
   const ChildFormScreen({super.key});
 
+  static const routeName = "/child-form";
+
   @override
   State<ChildFormScreen> createState() => _ChildFormScreenState();
 }

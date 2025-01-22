@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:watchful_eye/all_childs_screen.dart';
+import 'package:watchful_eye/extensions/context_extensions.dart';
 import 'package:watchful_eye/services/auth_service.dart';
+import 'package:watchful_eye/verify_email_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  static const routeName = "/login";
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -88,17 +92,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
+                          FocusScope.of(context).unfocus();
                           setState(() {
                             _isLoading = true;
                           });
                           try {
                             AuthServices.signIn(_email, _password)
                                 .then((value) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: const Text("Login Successful"),
-                                ),
-                              );
+                              // Check if email is verified
+                              if (!value.user!.emailVerified) {
+                                Navigator.pushNamed(
+                                    context, VerifyEmailScreen.routeName);
+                                return;
+                              }
+                              context.showSnackBar("Login Successful");
                               Navigator.pushAndRemoveUntil(context,
                                   MaterialPageRoute(
                                 builder: (context) {

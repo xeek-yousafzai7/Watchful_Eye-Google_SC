@@ -6,6 +6,7 @@ import 'package:watchful_eye/child_form_screen.dart';
 import 'package:watchful_eye/login_screen.dart';
 import 'package:watchful_eye/parent_zone_screen.dart';
 import 'package:watchful_eye/register_screen.dart';
+import 'package:watchful_eye/verify_email_screen.dart';
 import 'package:watchful_eye/welcome_screen.dart';
 
 void main() async {
@@ -26,11 +27,12 @@ class MyApp extends StatelessWidget {
       ),
       home: const WelcomeScreen(),
       routes: {
-        "/login": (context) => const LoginScreen(),
-        "/parent-zone": (context) => const ParentZoneScren(),
-        "/child-form": (context) => const ChildFormScreen(),
-        "/register": (context) => const RegisterScreen(),
-        "/all-childs": (context) => const AllChildsScreen(),
+        LoginScreen.routeName: (context) => const LoginScreen(),
+        ParentZoneScren.routeName: (context) => const ParentZoneScren(),
+        ChildFormScreen.routeName: (context) => const ChildFormScreen(),
+        RegisterScreen.routeName: (context) => const RegisterScreen(),
+        AllChildsScreen.routeName: (context) => const AllChildsScreen(),
+        VerifyEmailScreen.routeName: (context) => const VerifyEmailScreen(),
       },
     );
   }

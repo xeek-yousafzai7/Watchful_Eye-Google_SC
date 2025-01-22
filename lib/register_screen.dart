@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:watchful_eye/child_form_screen.dart';
+import 'package:watchful_eye/extensions/context_extensions.dart';
 import 'package:watchful_eye/services/auth_service.dart';
+import 'package:watchful_eye/verify_email_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
+
+  static const routeName = "/register";
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -163,6 +168,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ElevatedButton(
                         onPressed: () async {
                           if (_formKey.currentState?.validate() ?? false) {
+                            FocusScope.of(context).unfocus();
                             setState(() {
                               _isLoading = true;
                             });
@@ -176,20 +182,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       instituteName: _instituteName,
                                       instituteAddress: _instituteAddress)
                                   .then((value) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Registered Successfully"),
-                                  ),
+                                if (!value.user!.emailVerified) {
+                                  Navigator.pushNamed(
+                                    context,
+                                    VerifyEmailScreen.routeName,
+                                  );
+                                  return;
+                                }
+                                context.showSnackBar("Registered Successfully");
+                                Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  ChildFormScreen.routeName,
+                                  (route) => false,
                                 );
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                    "/child-form", (route) => false);
                               });
                             } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(e.toString()),
-                                ),
-                              );
+                              context.showSnackBar(e.toString());
                             }
                             setState(() {
                               _isLoading = false;
