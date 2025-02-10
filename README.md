@@ -20,3 +20,5 @@ To register the child Login as Institution and register account.
 Enter child's details and get a unique ID for child.
 Enter that unique ID in parent zone and track the child.
 Once the app is installed and running on both phones, the parent can track the child's location using the parent's phone. The app uses GPS to track the child's location in real-time and displays it on a map. The parent can also set up geofencing to receive notifications when the child enters or leaves a specific area.
+
+# Find APK file for installing application in your machine.
